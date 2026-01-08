@@ -1,14 +1,18 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(test_pkg)
 
-find_package(catkin  REQUIRED COMPONENTS
-  roscpp
-  tf
-)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
-catkin_package()
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(tf2_ros REQUIRED)
 
-include_directories(include ${catkin_INCLUDE_DIRS} )
+add_executable(save_traj_as_tum src/trajectorysave.cpp)
+ament_target_dependencies(save_traj_as_tum rclcpp tf2_ros)
 
-add_executable(save_traj_as_tum src/trajectorysave.cpp )
-target_link_libraries(save_traj_as_tum ${catkin_LIBRARIES})
+install(TARGETS save_traj_as_tum
+  DESTINATION lib/${PROJECT_NAME})
+
+ament_package()
